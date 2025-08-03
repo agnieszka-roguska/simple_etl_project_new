@@ -21,15 +21,16 @@ def get_country(lng: str, lat: str) -> str:
 
 
 def process_users_data(users_data: list[dict]) -> list:
+    required_fileds = {"id", "firstName", "lastName", "age", "gender", "email"}
     for index, user in enumerate(users_data):
         user_filtered = {
             k: v
             for k, v in user.items()
-            if k in ["id", "firstName", "lastName", "age", "gender", "email"]
+            if k in required_fileds
         }
-        user_coords = user["address"]["coordinates"]
-        lat = user_coords["lat"]
-        lng = user_coords["lng"]
+        coords = user.get("address", {}).get("coordinates", {})
+        lat = coords.get("lat")
+        lng = coords.get("lng")
         user_filtered["lat"] = lat
         user_filtered["lng"] = lng
         user_filtered["country"] = get_country(lng, lat)
@@ -114,7 +115,8 @@ def save_as_csv(data: list[dict]) -> None:
     os.makedirs(results_folder, exist_ok=True)
     # Define the full path to the file you want to save
     csv_file_path = os.path.join(results_folder, "users_data.csv")
-    with open(csv_file_path, mode="a") as file:
+
+    with open(csv_file_path, mode="a", newline='', encoding='utf-8') as file:
         writer = csv.DictWriter(file, fieldnames=data[0].keys())
         writer.writeheader()
         writer.writerows(data)
