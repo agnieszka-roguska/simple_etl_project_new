@@ -1,8 +1,6 @@
 import functions
 
-# TODO: create main() function and put everything there
-
-if __name__ == "__main__":
+def main():
     url = "https://dummyjson.com/users"
     users = functions.fetch_users_in_batches(url, 100)
     data = functions.get_cart_data()
@@ -10,3 +8,6 @@ if __name__ == "__main__":
 
     functions.save_as_csv(users)
     functions.save_to_db(users)
+
+if __name__ == "__main__":
+    main()

@@ -1,7 +1,8 @@
 import csv
 import os
-import requests
 import sqlite3
+
+import requests
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -23,11 +24,7 @@ def get_country(lng: str, lat: str) -> str:
 def process_users_data(users_data: list[dict]) -> list:
     required_fileds = {"id", "firstName", "lastName", "age", "gender", "email"}
     for index, user in enumerate(users_data):
-        user_filtered = {
-            k: v
-            for k, v in user.items()
-            if k in required_fileds
-        }
+        user_filtered = {k: v for k, v in user.items() if k in required_fileds}
         coords = user.get("address", {}).get("coordinates", {})
         lat = coords.get("lat")
         lng = coords.get("lng")
@@ -116,7 +113,7 @@ def save_as_csv(data: list[dict]) -> None:
     # Define the full path to the file you want to save
     csv_file_path = os.path.join(results_folder, "users_data.csv")
 
-    with open(csv_file_path, mode="a", newline='', encoding='utf-8') as file:
+    with open(csv_file_path, mode="a", newline="", encoding="utf-8") as file:
         writer = csv.DictWriter(file, fieldnames=data[0].keys())
         writer.writeheader()
         writer.writerows(data)
